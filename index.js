@@ -29,6 +29,14 @@ async function run() {
     const reviewCollection = client.db("bistroDb").collection("reviews");
     const cartCollection = client.db("bistroDb").collection("carts");
 
+// jwt related api
+app.post ('/jwt',async(req,res)=>{
+  const user = req.body;
+  const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRETE,{
+    expiresIn:'1h'});
+    res.send({token})
+})
+
     // get menu
     app.get("/menu", async (req, res) => {
       const result = await menuCollection.find().toArray();
