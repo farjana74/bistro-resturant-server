@@ -75,6 +75,21 @@ jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err,decoded)=>{
       const result = await userCollection.find().toArray();
       res.send(result);
     });
+
+    app.get('/user/admin/:email',verifyToken, async(req,res)=>{
+      const email = req.params.email;
+      if (email !== req.decoded.email){
+     return res.status(403).send({message:'unauthorized access'})
+      }
+      const query = {email:email}
+      const user = await userCollection.findOne(query);
+      let admin= false;
+      if(user){
+        admin = user?.role === 'admin';
+        
+      }
+
+    })
     app.delete("/users/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
